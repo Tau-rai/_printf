@@ -26,7 +26,15 @@ int _printf(const char *format, ...)
 			{
 				case 'c':
 					c = va_arg(ap, int);
-					write(1, &c, 1);
+					if (buff_ind < BUFFER_SIZE - 1)
+					{
+						out_buff[buff_ind++] = c;
+					}
+					else
+					{
+						flush_buff();
+						out_buff[buff_ind++] = c;
+					}
 					chars_printed++;
 					break;
 				case 's':

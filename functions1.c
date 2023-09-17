@@ -127,3 +127,10 @@ int print_hex(unsigned int n, bool uppercase)
 
 	return (len);
 }
+static void flush_buff() {
+	if (buff_ind > 0)
+	{
+		write(1, out_buff, buff_ind);
+		buff_ind = 0;
+	}
+}
