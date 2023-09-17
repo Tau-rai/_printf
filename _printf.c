@@ -11,12 +11,13 @@ int _printf(const char *format, ...)
 	va_list ap;
 	int chars_printed = 0;
 	char c;
+	char *s;
 
 	if (format == NULL)
 		return (-1);
 	va_start(ap, format);
 
-	while (*format != '\0')
+	while (*format)
 	{
 		if (*format == '%')
 		{
@@ -29,11 +30,23 @@ int _printf(const char *format, ...)
 					chars_printed++;
 					break;
 				case 's':
-					chars_printed = _printf(va_arg(ap, char *));
+					s = (va_arg(ap, char *));
+					if (s == NULL)
+						s = "(null)";
+					while (*s)
+					{
+						write(1, s, 1);
+						s++;
+						chars_printed++;
+					}
 					break;
 				case '%':
 					write(1, "%", 1);
 					chars_printed++;
+					break;
+				case 'd':
+				case 'i':
+					chars_printed += print_int(va_arg(ap, int));
 					break;
 				default:
 					break;
@@ -41,9 +54,7 @@ int _printf(const char *format, ...)
 		}
 		else
 		{
-			char c = *format;
-
-			write(1, &c, 1);
+			write(1, format, 1);
 			chars_printed++;
 		}
 		format++;
