@@ -71,7 +71,7 @@ int print_unsigned(unsigned int n)
 	while (n > 0);
 
 	for (k = len - 1; k >= 0; k--)
-		write(i, &buff[i], 1);
+		write(1, &buff[k], 1);
 
 	return (len);
 }
@@ -88,12 +88,12 @@ int print_oct(unsigned int n)
 	do
 	{
 		buff[len++] = (char)((n & 7) + '0');
-		n >> 3;
+		n >>= 3;
 	}
 	while (n > 0);
 
 	for (k = len - 1; k >= 0; k--)
-		write(1, buff[k], 1);
+		write(1, &buff[k], 1);
 
 	return (len);
 }
