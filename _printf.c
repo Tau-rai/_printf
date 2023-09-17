@@ -48,6 +48,21 @@ int _printf(const char *format, ...)
 				case 'i':
 					chars_printed += print_int(va_arg(ap, int));
 					break;
+				case 'b':
+					chars_printed += print_bin(va_arg(ap, unsigned int));
+					break;
+				case 'u':
+					chars_printed += print_unsigned(va_arg(ap, unsigned int));
+					break;
+				case 'o':
+					chars_printed += print_oct(va_arg(ap, unsigned int));
+					break;
+				case'x':
+					chars_printed += print_hex(va_arg(ap, unsigned int), false);
+					break;
+				case 'X':
+					chars_printed += print_hex(va_arg(ap, unsigned int), true);
+					break;
 				default:
 					break;
 			}
