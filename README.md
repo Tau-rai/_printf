@@ -14,3 +14,6 @@ This is the custom printf group project repository
 
 3. What one has not experienced, one will never understand.
 - This tasks handles the following conversion specifiers: u,o, x and X.
+
+4. Nothing in fine print is ever good news.
+- This task creates a local buffer of 1024 chars in order to call write as little as possible.

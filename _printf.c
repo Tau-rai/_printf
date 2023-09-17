@@ -1,27 +1,37 @@
 #include "main.h"
 
-void print_buffer(char buffer[], int *buff_ind);
-
+/*static void flush_buff(void);*/
+int _printf(const char *format, ...);
 /**
- * _printf - Printf function
- * @format: format.
- * Return: Printed chars.
+ * _printf - a function that produces output according to a format
+ * @format: a character string
+ * Return: the number of chars printed
  */
 int _printf(const char *format, ...)
 {
-	int i, printed = 0, printed_chars = 0;
-	int flags, width, precision, size, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+	va_list ap;
+	int chars_printed = 0;
+	char c;
+	char *s;
+	char out_buff[BUFFER_SIZE];
+	static int buff_ind;
+
+	static void flush_buff(void)
+	{
+		if (buff_ind > 0)
+		{
+			write(1, out_buff, buff_ind);
+			buff_ind = 0;
+		}
+	}
 
 	if (format == NULL)
 		return (-1);
+	va_start(ap, format);
 
-	va_start(list, format);
-
-	for (i = 0; format && format[i] != '\0'; i++)
+	while (*format)
 	{
-		if (format[i] != '%')
+		if (*format == '%')
 		{
 			format++;
 			switch (*format)
@@ -45,13 +55,29 @@ int _printf(const char *format, ...)
 						s = "(null)";
 					while (*s)
 					{
-						write(1, s, 1);
+						if (buff_ind < BUFFER_SIZE - 1)
+						{
+							out_buff[buff_ind++] = *s;
+						}
+						else
+						{
+							flush_buff();
+							out_buff[buff_ind++] = *s;
+						}
 						s++;
 						chars_printed++;
 					}
 					break;
 				case '%':
-					write(1, "%", 1);
+					if (buff_ind < BUFFER_SIZE - 1)
+					{
+						out_buff[buff_ind++] = '%';
+					}
+					else
+					{
+						flush_buff();
+						out_buff[buff_ind++] = '%';
+					}
 					chars_printed++;
 					break;
 				case 'd':
@@ -62,7 +88,7 @@ int _printf(const char *format, ...)
 					chars_printed += print_bin(va_arg(ap, unsigned int));
 					break;
 				case 'u':
-					chars_printed += print_unsigned(va_arg(ap, unsigned int));
+					chars_printed += print_unsignedInt(va_arg(ap, unsigned int));
 					break;
 				case 'o':
 					chars_printed += print_oct(va_arg(ap, unsigned int));
@@ -79,36 +105,38 @@ int _printf(const char *format, ...)
 		}
 		else
 		{
-			print_buffer(buffer, &buff_ind);
-			flags = get_flags(format, &i);
-			width = get_width(format, &i, list);
-			precision = get_precision(format, &i, list);
-			size = get_size(format, &i);
-			++i;
-			printed = handle_print(format, &i, list, buffer,
-				flags, width, precision, size);
-			if (printed == -1)
-				return (-1);
-			printed_chars += printed;
+			if (buff_ind < BUFFER_SIZE - 1)
+			{
+				out_buff[buff_ind++] = *format;
+			}
+			else
+			{
+				flush_buff();
+				out_buff[buff_ind++] = *format;
+			}
+			chars_printed++;
 		}
+		if (buff_ind == BUFFER_SIZE)
+			flush_buff();
+
+		format++;
 	}
+	flush_buff();
 
-	print_buffer(buffer, &buff_ind);
-
-	va_end(list);
-
-	return (printed_chars);
+	va_end(ap);
+	return (chars_printed);
 }
-
 /**
- * print_buffer - Prints the contents of the buffer if it exist
- * @buffer: Array of chars
- * @buff_ind: Index at which to add next char, represents the length.
+ * flush_buff - writes the contents of buffer to stdout
+ * Return: Nothing
  */
-void print_buffer(char buffer[], int *buff_ind)
-{
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
+/*static int buff_ind;*/
 
-	*buff_ind = 0;
-}
+/*static void flush_buff(void)
+{
+	if (buff_ind > 0)
+	{
+		write(1, out_buff, buff_ind);
+		buff_ind = 0;
+	}
+}*/

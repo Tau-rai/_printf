@@ -54,21 +54,19 @@ int print_bin(unsigned int n)
 	return (chars_printed);
 }
 /**
- * print_unsigned - prints an unsigned int to stdout
+ * print_unsignedInt - prints an unsigned int to stdout
  * @n: an unsigned int
  * Return: Always 0.
  */
-int print_unsigned(unsigned int n)
+int print_unsignedInt(unsigned int n)
 {
 	char buff[32];
 	int k, len = 0;
 
-	do
-	{
+	do {
 		buff[len++] = (char)((n % 10) + '0');
 		n /= 10;
-	}
-	while (n > 0);
+	} while (n > 0);
 
 	for (k = len - 1; k >= 0; k--)
 		write(1, &buff[k], 1);
@@ -85,12 +83,10 @@ int print_oct(unsigned int n)
 	char buff[32];
 	int k, len = 0;
 
-	do
-	{
+	do {
 		buff[len++] = (char)((n & 7) + '0');
 		n >>= 3;
-	}
-	while (n > 0);
+	} while (n > 0);
 
 	for (k = len - 1; k >= 0; k--)
 		write(1, &buff[k], 1);
@@ -109,8 +105,7 @@ int print_hex(unsigned int n, bool uppercase)
 	int k, len = 0;
 	int digit;
 
-	do
-	{
+	do {
 		digit = n & 15;
 		if (digit < 10)
 			buff[len++] = (char)(digit + '0');
@@ -119,18 +114,10 @@ int print_hex(unsigned int n, bool uppercase)
 		else
 			buff[len++] = (char)(digit - 10 + 'a');
 		n >>= 4;
-	}
-	while (n > 0);
+	} while (n > 0);
 
 	for (k = len - 1; k >= 0; k--)
 		write(1, &buff[k], 1);
 
 	return (len);
-}
-static void flush_buff() {
-	if (buff_ind > 0)
-	{
-		write(1, out_buff, buff_ind);
-		buff_ind = 0;
-	}
 }
