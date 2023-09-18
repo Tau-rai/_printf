@@ -8,8 +8,7 @@
 #include <stdbool.h>
 
 #define BUFFER_SIZE 1024
-
-extern char out_buff[BUFFER_SIZE];
+extern char buff[BUFFER_SIZE];
 
 int _printf(const char *format, ...);
 int print_int(int n);

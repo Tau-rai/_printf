@@ -1,9 +1,8 @@
 #include "main.h"
 
-/*static void flush_buff(void);*/
 int _printf(const char *format, ...);
 /**
- * _printf - a function that produces output according to a format
+ * _printf - a custom function that prints output according to a format
  * @format: a character string
  * Return: the number of chars printed
  */
@@ -13,17 +12,6 @@ int _printf(const char *format, ...)
 	int chars_printed = 0;
 	char c;
 	char *s;
-	char out_buff[BUFFER_SIZE];
-	static int buff_ind;
-
-	static void flush_buff(void)
-	{
-		if (buff_ind > 0)
-		{
-			write(1, out_buff, buff_ind);
-			buff_ind = 0;
-		}
-	}
 
 	if (format == NULL)
 		return (-1);
@@ -38,15 +26,7 @@ int _printf(const char *format, ...)
 			{
 				case 'c':
 					c = va_arg(ap, int);
-					if (buff_ind < BUFFER_SIZE - 1)
-					{
-						out_buff[buff_ind++] = c;
-					}
-					else
-					{
-						flush_buff();
-						out_buff[buff_ind++] = c;
-					}
+					write(1, &c, 1);
 					chars_printed++;
 					break;
 				case 's':
@@ -55,29 +35,13 @@ int _printf(const char *format, ...)
 						s = "(null)";
 					while (*s)
 					{
-						if (buff_ind < BUFFER_SIZE - 1)
-						{
-							out_buff[buff_ind++] = *s;
-						}
-						else
-						{
-							flush_buff();
-							out_buff[buff_ind++] = *s;
-						}
+						write(1, s, 1);
 						s++;
 						chars_printed++;
 					}
 					break;
 				case '%':
-					if (buff_ind < BUFFER_SIZE - 1)
-					{
-						out_buff[buff_ind++] = '%';
-					}
-					else
-					{
-						flush_buff();
-						out_buff[buff_ind++] = '%';
-					}
+					write(1, "%", 1);
 					chars_printed++;
 					break;
 				case 'd':
@@ -99,44 +63,20 @@ int _printf(const char *format, ...)
 				case 'X':
 					chars_printed += print_hex(va_arg(ap, unsigned int), true);
 					break;
+
 				default:
 					break;
 			}
 		}
 		else
 		{
-			if (buff_ind < BUFFER_SIZE - 1)
-			{
-				out_buff[buff_ind++] = *format;
-			}
-			else
-			{
-				flush_buff();
-				out_buff[buff_ind++] = *format;
-			}
+			write(1, format, 1);
 			chars_printed++;
 		}
-		if (buff_ind == BUFFER_SIZE)
-			flush_buff();
-
 		format++;
+
 	}
-	flush_buff();
 
 	va_end(ap);
 	return (chars_printed);
 }
-/**
- * flush_buff - writes the contents of buffer to stdout
- * Return: Nothing
- */
-/*static int buff_ind;*/
-
-/*static void flush_buff(void)
-{
-	if (buff_ind > 0)
-	{
-		write(1, out_buff, buff_ind);
-		buff_ind = 0;
-	}
-}*/
