@@ -17,3 +17,9 @@ This is the custom printf group project repository
 
 4. Nothing in fine print is ever good news.
 - This task creates a local buffer of 1024 chars in order to call write as little as possible.
+
+5. My weakness is waering too much leopard print.
+- This task handles the S conversion pointer which handles hex characters.
+
+6. How is the world ruled and led to war? Diplomats lie to journalist and believe these lies hwen they see them in print.
+- This task handles the conversion specifier p.
