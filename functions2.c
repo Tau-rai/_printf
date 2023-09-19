@@ -1,31 +1,36 @@
 #include "main.h"
 
 /**
- * print_s - prints out a string of characters
+ * print_non_printable - prints out a string of characters
+ * @ap: pointer to a format string
  * @s: pointer to a string
  * Return: Nothing.
  */
-void print_s(char *s)
+int print_non_printable(va_list ap, char *s)
 {
+	int chars_printed = 0;
 	int k = 0;
-	char hex[3];
 
-	while (s[k])
+	s = va_arg(ap, char *);
+
+	if (s == NULL)
+		s = "(null)";
+
+	while (s[k] != '\0')
 	{
 		if (s[k] < 32 || s[k] >= 127)
 		{
-			hex[0] = s[k] / 16;
-			hex[1] = s[k] % 16;
-			write(1, "\\x", 2);
-			write(1, "0123456789ABCDEF" + hex[0], 1);
-			write(1, "0123456789ABCDEF" + hex[1], 1);
+			chars_printed += write(1, "\\x", 2);
+			chars_printed += write(1, &"0123456789ABCDEF"[(unsigned char)s[k] / 16], 1);
+			chars_printed += write(1, &"0123456789ABCDEF"[(unsigned char)s[k] % 16], 1);
 		}
 		else
 		{
-			write(1, &s[k], 1);
+			chars_printed += write(1, &s[k], 1);
 		}
 		k++;
 	}
+	return (chars_printed);
 }
 /**
  * print_address - prints the address of a pointer in hex format
@@ -34,43 +39,39 @@ void print_s(char *s)
  */
 int print_address(void *p)
 {
-	char buff[20];
+	int chars_printed = 0;
 	unsigned long int address;
-	int buff_ind;
-	int k, j;
-	char tmp;
-
-	if (!p)
-	{
-		write(1, "(null)", 5);
-	}
+	char buff[32];
+	int buff_ind = 0;
+	int k;
+	char hex[] = "0123456789abcdef";
 
 	address = (unsigned long int)p;
-	buff_ind = 2;
-	
-	buff[0] = '0';
-	buff[1] = 'x';
 
-	while (address > 0)
+	/*buff[buff_ind++] = '0';*/
+	/*buff[buff_ind++] = 'x';*/
+
+	if (address == 0)
 	{
-		int remainder = address % 16;
-
-		char hex_dig = (remainder < 10) ? ('0' + remainder) : ('a' + remainder - 10);
-
-		buff[buff_ind++] = hex_dig;
-		address /= 16;
+		buff[buff_ind++] = '0';
 	}
-	for (k = 2; (j = buff_ind - 1) && (k < j); k++, j--)
+	else
 	{
-		tmp = buff[k];
-		buff[k] = buff[j];
-		buff[j] = tmp;
+		while (address > 0)
+		{
+			buff[buff_ind++] = hex[address % 16];
+			address /= 16;
+		}
 	}
 
-	buff[buff_ind] = '\0';
+	buff[buff_ind++] = 'x';
+	buff[buff_ind++] = '0';
 
-	write(1, buff, buff_ind);
+	for (k = buff_ind - 1; k >= 0; k--)
+	{
+		write(1, &buff[k], 1);
+		chars_printed++;
+	}
 
-	return (0);
+	return (chars_printed);
 }
-

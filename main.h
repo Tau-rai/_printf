@@ -18,7 +18,7 @@ int print_bin(unsigned int n);
 int print_unsignedInt(unsigned int n);
 int print_oct(unsigned int n);
 int print_hex(unsigned int n, bool uppercase);
-void print_s(char *s);
+int print_non_printable(va_list ap, char buffer[]);
 int print_address(void *p);
 
 
