@@ -39,17 +39,14 @@ int print_non_printable(va_list ap, char *s)
  */
 int print_address(void *p)
 {
-	int chars_printed = 0;
 	unsigned long int address;
 	char buff[32];
+	int chars_printed = 0;
 	int buff_ind = 0;
-	int k;
+	int k = 0;
 	char hex[] = "0123456789abcdef";
 
 	address = (unsigned long int)p;
-
-	/*buff[buff_ind++] = '0';*/
-	/*buff[buff_ind++] = 'x';*/
 
 	if (address == 0)
 	{
