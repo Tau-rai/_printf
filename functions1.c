@@ -3,6 +3,7 @@
 /**
  * print_int - prints an int to stdout
  * @n: an integer value
+ * @chars_printed: character counter
  * Return: characters printed
  */
 int print_int(int n)

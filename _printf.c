@@ -79,10 +79,7 @@ int _printf(const char *format, ...)
 					chars_printed += print_hex(va_arg(ap, unsigned int), true);
 					break;
 				case 'S':
-					s = va_arg(ap, char *);
-					if (s == NULL)
-						s = "(null)";
-					print_s(s);
+					chars_printed += print_non_printable(ap, buff + chars_printed);
 					break;
 				case 'p':
 					p = va_arg(ap, void *);
